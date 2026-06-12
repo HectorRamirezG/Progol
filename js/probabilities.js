@@ -38,9 +38,9 @@ window.App = window.App || {};
 
   // Color según probabilidad (verde alto, ámbar medio, rojo bajo).
   Probs.color = (pct) => {
-    if (pct >= 55) return '#16a34a';
-    if (pct >= 38) return '#f59e0b';
-    return '#dc2626';
+    if (pct >= 55) return '#10b981';  // verde menta
+    if (pct >= 38) return '#8b5cf6';  // violeta lavanda (sin naranja)
+    return '#ef4444';                  // rojo coral
   };
 
   // HTML compacto de barra con %.

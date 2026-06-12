@@ -40,8 +40,7 @@ window.App = window.App || {};
   const renderJornadaSelector = (panel, tipo, list, activeId) => {
     const host = panel.querySelector('.jornada-bar');
     if (!host) return;
-    if (list.length <= 1) { host.innerHTML = ''; return; }
-    host.innerHTML = `
+    const pills = list.length > 1 ? `
       <label class="jornada-label"><i data-lucide="layers"></i> Jornada:</label>
       <div class="jornada-pills">
         ${list.map(c => `
@@ -49,6 +48,14 @@ window.App = window.App || {};
             ${Utils.escapeHtml(c.nombre)}
           </button>
         `).join('')}
+      </div>
+    ` : '';
+    host.innerHTML = `
+      ${pills}
+      <div class="legend" title="¿Qué significa cada columna?">
+        <span><i data-lucide="sparkles"></i> <strong>Sugerido</strong> = pick más probable</span>
+        <span><i data-lucide="percent"></i> <strong>Prob. de tu pick</strong> = qué tan probable es lo que apostaste</span>
+        <span><i data-lucide="check-circle-2"></i> <strong>Estatus</strong> = ✓ acierto · ✕ fallo · — pendiente</span>
       </div>
     `;
     host.querySelectorAll('[data-jornada]').forEach(btn => {
@@ -107,17 +114,18 @@ window.App = window.App || {};
 
   // Tabla con resultado real, sugerencia, picks, probabilidad y estatus.
   const renderTable = (table, c) => {
+    const { Flags } = window.App;
     const head = `
       <thead>
         <tr>
           <th>#</th>
           <th>Partido</th>
-          <th class="sub">Resultado real</th>
-          <th class="sub">Sugerido</th>
+          <th class="sub" title="Captura aquí el marcador final cuando termine">Real</th>
+          <th class="sub" title="Pick con mayor probabilidad estimada (heurística básica) y su porcentaje">Sugerido</th>
           ${c.boletos.map(b => `
-            <th class="sub">${Utils.escapeHtml(b.nombre)}<br><small>${Utils.escapeHtml(Utils.fmtFecha(b.fecha))}</small></th>
-            <th class="sub">%</th>
-            <th class="sub">Estatus</th>
+            <th class="sub" title="Lo que apostaste en este boleto">${Utils.escapeHtml(b.nombre)}<br><small>${Utils.escapeHtml(Utils.fmtFecha(b.fecha))}</small></th>
+            <th class="sub" title="Probabilidad estimada de TU pick (no del sugerido)">Prob. de tu pick</th>
+            <th class="sub" title="✓ acertaste · ✕ fallaste · — pendiente">Estatus</th>
           `).join('')}
         </tr>
       </thead>
@@ -141,13 +149,17 @@ window.App = window.App || {};
       return `
         <tr>
           <td class="col-num">${p.n}</td>
-          <td class="col-partido">${Utils.escapeHtml(p.local)} <span class="vs">vs</span> ${Utils.escapeHtml(p.visitante)}</td>
+          <td class="col-partido">
+            <span class="team">${Flags ? Flags.imgFor(p.local) : ''}<span>${Utils.escapeHtml(p.local)}</span></span>
+            <span class="vs">vs</span>
+            <span class="team">${Flags ? Flags.imgFor(p.visitante) : ''}<span>${Utils.escapeHtml(p.visitante)}</span></span>
+          </td>
           <td class="col-real">
             <select class="real-select" data-concurso="${c.id}" data-idx="${i}">
               ${OPTIONS.map(o => `<option value="${o}" ${p.resultado === o ? 'selected' : ''}>${o === 'Pendiente' ? '—' : o}</option>`).join('')}
             </select>
           </td>
-          <td class="col-suggest">
+          <td class="col-suggest" title="Pick más probable según los equipos">
             <span class="suggest-pill suggest-${sug}">${sug} · ${probs[sug]}%</span>
           </td>
           ${cells}

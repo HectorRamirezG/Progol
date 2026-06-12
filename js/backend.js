@@ -8,21 +8,19 @@ window.App = window.App || {};
   const { Store, Utils } = window.App;
   const Backend = {};
 
-  // Ping con timeout corto. Actualiza badge en header.
+  // Ping con timeout corto. Solo muestra el badge si el backend responde (silencioso si no).
   Backend.ping = async () => {
     const badge = document.getElementById('backend-status'); if (!badge) return false;
     try {
       const r = await fetch(`${URL}/health`, { signal: AbortSignal.timeout(1500) });
       if (r.ok) {
-        badge.innerHTML = '<i data-lucide="circle-check"></i> Backend online';
+        badge.innerHTML = '<i data-lucide="circle-check"></i> <span class="label">Backend local</span>';
         badge.className = 'badge badge-online';
         Utils.refreshIcons();
         return true;
       }
-    } catch (_) { /* offline */ }
-    badge.innerHTML = '<i data-lucide="circle"></i> Offline';
-    badge.className = 'badge badge-offline';
-    Utils.refreshIcons();
+    } catch (_) { /* sin backend: lo dejamos oculto */ }
+    badge.className = 'badge badge-offline hidden';
     return false;
   };
 

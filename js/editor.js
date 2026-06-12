@@ -69,8 +69,8 @@ window.App = window.App || {};
               ${c.partidos.map((p, pi) => `
                 <tr data-pi="${pi}">
                   <td class="center">${p.n}</td>
-                  <td><input type="text" data-act="partido" data-field="local" value="${Utils.escapeAttr(p.local)}" /></td>
-                  <td><input type="text" data-act="partido" data-field="visitante" value="${Utils.escapeAttr(p.visitante)}" /></td>
+                  <td><span class="editor-team">${window.App.Flags ? window.App.Flags.imgFor(p.local) : ''}<input type="text" data-act="partido" data-field="local" value="${Utils.escapeAttr(p.local)}" /></span></td>
+                  <td><span class="editor-team">${window.App.Flags ? window.App.Flags.imgFor(p.visitante) : ''}<input type="text" data-act="partido" data-field="visitante" value="${Utils.escapeAttr(p.visitante)}" /></span></td>
                   <td>
                     <select data-act="partido" data-field="resultado">
                       ${OPTIONS.map(o => `<option value="${o}" ${p.resultado===o?'selected':''}>${o}</option>`).join('')}
