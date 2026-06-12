@@ -17,18 +17,20 @@
     <div class="header-inner">
       <div class="brand">
         <div class="brand-icon"><i data-lucide="trophy"></i></div>
-        <div>
-          <h1>Progol Tracker</h1>
-          <span class="subtitle">Seguimiento de boletos · 100% local</span>
+        <div class="brand-text">
+          <h1>Progol <span class="brand-accent">Tracker</span></h1>
+          <span class="subtitle">Progol · Revancha · Media Semana</span>
         </div>
       </div>
       <div class="header-actions">
-        <span id="cloud-status" class="badge badge-offline" title="Estado de sincronización en la nube">
-          <i data-lucide="cloud-off"></i> <span class="label">Sin nube</span>
-        </span>
-        <span id="backend-status" class="badge badge-offline hidden" title="Backend Python local (opcional)">
-          <i data-lucide="circle"></i> <span class="label">Local</span>
-        </span>
+        <div class="status-group">
+          <span id="cloud-status" class="badge badge-offline" title="Estado de sincronización en la nube">
+            <i data-lucide="cloud-off"></i> <span class="label">Sin nube</span>
+          </span>
+          <span id="backend-status" class="badge badge-offline hidden" title="Backend Python local (opcional)">
+            <i data-lucide="circle"></i> <span class="label">Local</span>
+          </span>
+        </div>
         <button id="btn-refresh" class="btn btn-ghost" title="Recalcular estatus">
           <i data-lucide="refresh-cw"></i> <span class="label">Recalcular</span>
         </button>
@@ -192,6 +194,7 @@
 
   <script src="vendor/lucide.min.js"></script>
   <script src="vendor/chart.umd.min.js"></script>
+  <script src="vendor/chartjs-plugin-datalabels.min.js"></script>
   <script src="data/seed.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/flags.js"></script>
