@@ -15,10 +15,9 @@ window.App = window.App || {};
 
   // Renderiza la pestaña completa para un tipo.
   Render.tab = (tipo, ids) => {
+    const list = Store.listByTipo(tipo);
     const c = Store.getByTipo(tipo);
     const panel = document.getElementById('tab-' + tipo);
-    const table = document.getElementById(ids.table);
-    const summary = document.getElementById(ids.summary);
     if (!panel) return;
 
     // Si no hay concurso de este tipo, muestra empty state.
@@ -28,10 +27,34 @@ window.App = window.App || {};
     }
     // Si veníamos del empty, restauramos las secciones originales.
     ensureSectionsVisible(panel, tipo, ids);
+    renderJornadaSelector(panel, tipo, list, c.id);
+    const table = document.getElementById(ids.table);
+    const summary = document.getElementById(ids.summary);
     renderTable(table, c);
     renderSummary(summary, c);
     Charts.renderBars(ids.bars, c, Stats.tallyBoleto);
     Charts.renderPie(ids.pie, c, Stats.tallyBoleto);
+  };
+
+  // Si hay más de 1 concurso del mismo tipo, muestra selector arriba.
+  const renderJornadaSelector = (panel, tipo, list, activeId) => {
+    const host = panel.querySelector('.jornada-bar');
+    if (!host) return;
+    if (list.length <= 1) { host.innerHTML = ''; return; }
+    host.innerHTML = `
+      <label class="jornada-label"><i data-lucide="layers"></i> Jornada:</label>
+      <div class="jornada-pills">
+        ${list.map(c => `
+          <button class="jornada-pill ${c.id === activeId ? 'active' : ''}" data-jornada="${c.id}">
+            ${Utils.escapeHtml(c.nombre)}
+          </button>
+        `).join('')}
+      </div>
+    `;
+    host.querySelectorAll('[data-jornada]').forEach(btn => {
+      btn.addEventListener('click', () => Store.setActive(tipo, btn.dataset.jornada));
+    });
+    Utils.refreshIcons();
   };
 
   // Estado vacío: CTA para crear concurso de este tipo.
@@ -59,12 +82,21 @@ window.App = window.App || {};
 
   // Restaura el HTML original del tab si vino del empty state.
   const ensureSectionsVisible = (panel, tipo, ids) => {
-    if (panel.querySelector(`#${ids.table}`)) return;
+    if (panel.querySelector(`#${ids.table}`)) {
+      // Asegura barra de jornada incluso en panel ya inicializado.
+      if (!panel.querySelector('.jornada-bar')) {
+        const bar = document.createElement('div');
+        bar.className = 'jornada-bar';
+        panel.insertBefore(bar, panel.querySelector('.charts-row'));
+      }
+      return;
+    }
     panel.innerHTML = `
       <div class="panel-header">
         <h2><i data-lucide="ticket" class="h-icon"></i> ${LABEL[tipo] || tipo}</h2>
         <div class="summary" id="${ids.summary}"></div>
       </div>
+      <div class="jornada-bar"></div>
       <div class="charts-row">
         <div class="chart-card"><h4>Aciertos por boleto</h4><canvas id="${ids.bars}"></canvas></div>
         <div class="chart-card"><h4>Distribución</h4><canvas id="${ids.pie}"></canvas></div>

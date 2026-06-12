@@ -1424,3 +1424,57 @@ code {
 @media (hover: none) and (pointer: coarse) {
   input, select, textarea, .form-row input, .form-row select { font-size: 16px !important; }
 }
+
+/* ============== JORNADA SELECTOR ============== */
+.jornada-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.jornada-bar:empty { display: none; }
+.jornada-label {
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--gray-500);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.jornada-label [data-lucide] { color: var(--navy); }
+.jornada-pills {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: var(--gray-100);
+  border-radius: 999px;
+  padding: 4px;
+}
+.jornada-pill {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 7px 16px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  border-radius: 999px;
+  font-family: inherit;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+.jornada-pill:hover { background: rgba(255,255,255,.6); color: var(--navy); }
+.jornada-pill.active {
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(15, 42, 71, .25);
+}
+
+@media (max-width: 600px) {
+  .jornada-bar { gap: 8px; margin-bottom: 10px; }
+  .jornada-label { font-size: .7rem; }
+  .jornada-pill { padding: 8px 12px; font-size: .82rem; min-height: 36px; }
+}

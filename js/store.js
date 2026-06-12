@@ -22,14 +22,13 @@ window.App = window.App || {};
     return state;
   };
 
-  // Migración: asegura que existan los tipos básicos copiándolos del SEED.
+  // Migración: añade del SEED los concursos que falten por id.
   const migrate = () => {
     let changed = false;
-    const REQUIRED = ['progol', 'revancha', 'mediasemana'];
-    REQUIRED.forEach(tipo => {
-      if (!state.concursos.find(c => c.tipo === tipo)) {
-        const seed = window.SEED_DATA.concursos.find(c => c.tipo === tipo);
-        if (seed) { state.concursos.push(deepClone(seed)); changed = true; }
+    (window.SEED_DATA?.concursos || []).forEach(seed => {
+      if (!state.concursos.find(c => c.id === seed.id)) {
+        state.concursos.push(deepClone(seed));
+        changed = true;
       }
     });
     if (changed) localStorage.setItem(KEY, JSON.stringify(state));
@@ -73,8 +72,27 @@ window.App = window.App || {};
     Store.save();
   };
 
-  // Devuelve el primer concurso por tipo.
-  Store.getByTipo = (tipo) => state.concursos.find(c => c.tipo === tipo);
+  // Devuelve el primer concurso por tipo (compat). Usa el activo si está marcado.
+  Store.getByTipo = (tipo) => {
+    const list = Store.listByTipo(tipo);
+    if (!list.length) return null;
+    const activeId = state._active?.[tipo];
+    if (activeId) {
+      const found = list.find(c => c.id === activeId);
+      if (found) return found;
+    }
+    return list[list.length - 1]; // por defecto: el más reciente
+  };
+
+  // Devuelve TODOS los concursos de un tipo (en orden de creación).
+  Store.listByTipo = (tipo) => state.concursos.filter(c => c.tipo === tipo);
+
+  // Marca un concurso como activo para su tipo (persistente).
+  Store.setActive = (tipo, concursoId) => {
+    state._active = state._active || {};
+    state._active[tipo] = concursoId;
+    Store.save();
+  };
 
   // Devuelve concurso por id.
   Store.getById = (id) => state.concursos.find(c => c.id === id);

@@ -79,23 +79,22 @@ window.SEED_DATA = {
     },
 
     // ----------------------------------------------------------------
-    //  PROGOL MEDIA SEMANA  (9 partidos)
-    //  Nota: los nombres de equipos son placeholders. Edítalos en BD.
+    //  PROGOL MEDIA SEMANA — Concurso 799 (07-jun-2026)
     // ----------------------------------------------------------------
     {
-      id: "mediasemana-2026-06",
+      id: "mediasemana-799",
       tipo: "mediasemana",
-      nombre: "Progol Media Semana",
+      nombre: "Media Semana #799",
       partidos: [
-        { n: 1, local: "Partido 1", visitante: "—", resultado: "Pendiente" },
-        { n: 2, local: "Partido 2", visitante: "—", resultado: "Pendiente" },
-        { n: 3, local: "Partido 3", visitante: "—", resultado: "Pendiente" },
-        { n: 4, local: "Partido 4", visitante: "—", resultado: "Pendiente" },
-        { n: 5, local: "Partido 5", visitante: "—", resultado: "Pendiente" },
-        { n: 6, local: "Partido 6", visitante: "—", resultado: "Pendiente" },
-        { n: 7, local: "Partido 7", visitante: "—", resultado: "Pendiente" },
-        { n: 8, local: "Partido 8", visitante: "—", resultado: "Pendiente" },
-        { n: 9, local: "Partido 9", visitante: "—", resultado: "Pendiente" }
+        { n: 1, local: "México",          visitante: "Sudáfrica",  resultado: "Pendiente" },
+        { n: 2, local: "Rep. Corea",      visitante: "Chequia",    resultado: "Pendiente" },
+        { n: 3, local: "Canadá",          visitante: "Bosnia",     resultado: "Pendiente" },
+        { n: 4, local: "E.U.A.",          visitante: "Paraguay",   resultado: "Pendiente" },
+        { n: 5, local: "Brasil",          visitante: "Marruecos",  resultado: "Pendiente" },
+        { n: 6, local: "Australia",       visitante: "Turquía",    resultado: "Pendiente" },
+        { n: 7, local: "Países Bajos",    visitante: "Japón",      resultado: "Pendiente" },
+        { n: 8, local: "Costa de Marfil", visitante: "Ecuador",    resultado: "Pendiente" },
+        { n: 9, local: "Suecia",          visitante: "Túnez",      resultado: "Pendiente" }
       ],
       boletos: [
         {
@@ -103,7 +102,29 @@ window.SEED_DATA = {
           nombre: "Media Semana 1",
           fecha: "2026-06-07",
           picks: ["E","L","E","L","L","E","L","V","V"]
-        },
+        }
+      ]
+    },
+
+    // ----------------------------------------------------------------
+    //  PROGOL MEDIA SEMANA — Concurso 800 (10-jun-2026)
+    // ----------------------------------------------------------------
+    {
+      id: "mediasemana-800",
+      tipo: "mediasemana",
+      nombre: "Media Semana #800",
+      partidos: [
+        { n: 1, local: "México",      visitante: "Rep. Corea", resultado: "Pendiente" },
+        { n: 2, local: "Francia",     visitante: "Senegal",    resultado: "Pendiente" },
+        { n: 3, local: "Inglaterra",  visitante: "Croacia",    resultado: "Pendiente" },
+        { n: 4, local: "Ghana",       visitante: "Panamá",     resultado: "Pendiente" },
+        { n: 5, local: "Chequia",     visitante: "Sudáfrica",  resultado: "Pendiente" },
+        { n: 6, local: "Suiza",       visitante: "Bosnia",     resultado: "Pendiente" },
+        { n: 7, local: "E.U.A.",      visitante: "Australia",  resultado: "Pendiente" },
+        { n: 8, local: "Escocia",     visitante: "Marruecos",  resultado: "Pendiente" },
+        { n: 9, local: "Turquía",     visitante: "Paraguay",   resultado: "Pendiente" }
+      ],
+      boletos: [
         {
           id: "ms-b2",
           nombre: "Media Semana 2",
