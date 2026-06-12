@@ -35,8 +35,21 @@ window.App = window.App || {};
     if (changed) localStorage.setItem(KEY, JSON.stringify(state));
   };
 
-  // Persiste y notifica.
+  // Persiste y notifica. Marca timestamp para resolución de conflictos remoto.
   Store.save = () => {
+    state._updatedAt = new Date().toISOString();
+    localStorage.setItem(KEY, JSON.stringify(state));
+    listeners.forEach(fn => { try { fn(state); } catch (e) { console.error(e); } });
+    // Push remoto si la nube está conectada (no bloquea la UI).
+    if (window.App.CloudSync && window.App.CloudSync.isConnected()) {
+      window.App.CloudSync.pushDebounced(state);
+    }
+  };
+
+  // Aplica estado venido del remoto: notifica pero NO dispara push (evita loop).
+  Store.applyRemote = (next) => {
+    if (!next || !Array.isArray(next.concursos)) return;
+    state = next;
     localStorage.setItem(KEY, JSON.stringify(state));
     listeners.forEach(fn => { try { fn(state); } catch (e) { console.error(e); } });
   };

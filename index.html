@@ -19,11 +19,14 @@
         </div>
       </div>
       <div class="header-actions">
+        <span id="cloud-status" class="badge badge-offline" title="Estado de sincronización en la nube">
+          <i data-lucide="cloud-off"></i> <span class="label">Sin nube</span>
+        </span>
         <span id="backend-status" class="badge badge-offline" title="Estado del backend Python">
-          <i data-lucide="circle"></i> Offline
+          <i data-lucide="circle"></i> <span class="label">Offline</span>
         </span>
         <button id="btn-refresh" class="btn btn-ghost" title="Recalcular estatus">
-          <i data-lucide="refresh-cw"></i> Recalcular
+          <i data-lucide="refresh-cw"></i> <span class="label">Recalcular</span>
         </button>
       </div>
     </div>
@@ -124,6 +127,40 @@
           </div>
         </div>
 
+        <!-- Sincronización en la nube -->
+        <div class="card card-cloud">
+          <h3><i data-lucide="cloud"></i> Sincronización en la nube</h3>
+          <p class="muted">Tus boletos se guardan en Supabase para verlos desde cualquier dispositivo.</p>
+          <div id="cloud-summary" class="cloud-summary muted">No conectado.</div>
+          <div class="form-row form-col">
+            <input id="cloud-url" type="url" placeholder="https://tu-proyecto.supabase.co" autocomplete="off" />
+            <input id="cloud-key" type="password" placeholder="anon public key (eyJ…)" autocomplete="off" />
+            <input id="cloud-slot" type="text" placeholder="slot (opcional, ej. hector)" value="default" autocomplete="off" />
+          </div>
+          <div class="btn-row">
+            <button id="btn-cloud-connect" class="btn btn-primary">
+              <i data-lucide="plug"></i> Conectar
+            </button>
+            <button id="btn-cloud-sync" class="btn">
+              <i data-lucide="refresh-cw"></i> Sincronizar ahora
+            </button>
+            <button id="btn-cloud-disconnect" class="btn btn-danger">
+              <i data-lucide="unplug"></i> Desconectar
+            </button>
+            <button id="btn-cloud-help" class="btn" title="Ver instrucciones de Supabase">
+              <i data-lucide="help-circle"></i> ¿Cómo?
+            </button>
+          </div>
+          <div class="btn-row">
+            <button id="btn-cloud-copy" class="btn" title="Copia un código para pegar en otro dispositivo">
+              <i data-lucide="copy"></i> Copiar config
+            </button>
+            <button id="btn-cloud-paste" class="btn" title="Pega un código copiado de otro dispositivo">
+              <i data-lucide="clipboard-paste"></i> Pegar config
+            </button>
+          </div>
+        </div>
+
         <!-- Asistente Backend -->
         <div class="card">
           <h3><i data-lucide="bot"></i> Asistente Python (opcional)</h3>
@@ -151,6 +188,7 @@
   <script src="data/seed.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/store.js"></script>
+  <script src="js/cloud-sync.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/probabilities.js"></script>
   <script src="js/charts.js"></script>
