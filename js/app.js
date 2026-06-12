@@ -146,6 +146,16 @@ create policy "anon all" on app_state
   const wireCloud = () => {
     if (!CloudSync) return;
     CloudSync.subscribe(renderCloudStatus);
+    // Pre-rellena inputs con el estado actual (o config default si nunca conectaste).
+    const fillInputs = (s) => {
+      const urlIn = document.getElementById('cloud-url');
+      const keyIn = document.getElementById('cloud-key');
+      const slotIn = document.getElementById('cloud-slot');
+      if (urlIn && !urlIn.value) urlIn.value = s.urlFull || '';
+      if (keyIn && !keyIn.value) keyIn.value = s.key || '';
+      if (slotIn && !slotIn.value) slotIn.value = s.slot || 'default';
+    };
+    fillInputs(CloudSync.getStatus());
     document.getElementById('btn-cloud-connect').addEventListener('click', cloudConnect);
     document.getElementById('btn-cloud-disconnect').addEventListener('click', () => {
       CloudSync.disconnect(); Utils.toast('Desconectado', 'info');

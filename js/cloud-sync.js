@@ -15,6 +15,14 @@ window.App = window.App || {};
   const REQUEST_TIMEOUT_MS = 6000;
   const SUPPRESS_PUSH_AFTER_PULL_MS = 600;
 
+  // Config por defecto: la app se auto-conecta al abrir sin pedir nada al usuario.
+  // Cambiar aquí para apuntar a otro proyecto o desactivar (poner null).
+  const DEFAULT_CONFIG = {
+    url: 'https://naxdlainnnkyctcisnew.supabase.co',
+    key: 'sb_publishable_UviL4QyL2c1Fiy5Dje5UkQ_se2lCZWB',
+    slot: 'default'
+  };
+
   const listeners = new Set();
   let config = null;            // { url, key, slot }
   let status = 'disconnected';  // disconnected | connecting | ok | error
@@ -58,7 +66,9 @@ window.App = window.App || {};
     lastError,
     lastSyncAt,
     slot: config?.slot || null,
-    urlHost: config ? new URL(config.url).host : null
+    urlHost: config ? new URL(config.url).host : null,
+    urlFull: config?.url || null,
+    key: config?.key || null
   });
 
   // Construye headers Supabase REST.
@@ -216,9 +226,9 @@ window.App = window.App || {};
     catch { return null; }
   };
 
-  // Bootstrap: si hay config guardada, reconecta silencioso (sin sobreescribir el local).
+  // Bootstrap: usa config guardada o la DEFAULT_CONFIG embebida.
   const autoStart = async () => {
-    const saved = loadConfig();
+    const saved = loadConfig() || (DEFAULT_CONFIG && DEFAULT_CONFIG.url && DEFAULT_CONFIG.key ? { ...DEFAULT_CONFIG } : null);
     if (!saved) return;
     config = saved;
     setStatus('connecting');
