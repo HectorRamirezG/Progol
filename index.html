@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progol Tracker</title>
+  <link rel="stylesheet" href="vendor/animate.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon"><i data-lucide="trophy"></i></div>
+        <div>
+          <h1>Progol Tracker</h1>
+          <span class="subtitle">Seguimiento de boletos · 100% local</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="backend-status" class="badge badge-offline" title="Estado del backend Python">
+          <i data-lucide="circle"></i> Offline
+        </span>
+        <button id="btn-refresh" class="btn btn-ghost" title="Recalcular estatus">
+          <i data-lucide="refresh-cw"></i> Recalcular
+        </button>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="progol"><i data-lucide="ticket"></i> Progol</button>
+      <button class="tab" data-tab="revancha"><i data-lucide="repeat-2"></i> Revancha</button>
+      <button class="tab" data-tab="mediasemana"><i data-lucide="calendar-clock"></i> Media Semana</button>
+      <button class="tab" data-tab="bd"><i data-lucide="database"></i> BD / Configuración</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- TAB PROGOL -->
+    <section id="tab-progol" class="tab-panel active">
+      <div class="panel-header">
+        <h2><i data-lucide="ticket" class="h-icon"></i> Progol Principal</h2>
+        <div class="summary" id="summary-progol"></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card"><h4>Aciertos por boleto</h4><canvas id="chart-progol-bars"></canvas></div>
+        <div class="chart-card"><h4>Distribución</h4><canvas id="chart-progol-pie"></canvas></div>
+      </div>
+      <div class="table-wrap"><table id="table-progol" class="data-table"></table></div>
+    </section>
+
+    <!-- TAB REVANCHA -->
+    <section id="tab-revancha" class="tab-panel">
+      <div class="panel-header">
+        <h2><i data-lucide="repeat-2" class="h-icon"></i> Revancha</h2>
+        <div class="summary" id="summary-revancha"></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card"><h4>Aciertos por boleto</h4><canvas id="chart-revancha-bars"></canvas></div>
+        <div class="chart-card"><h4>Distribución</h4><canvas id="chart-revancha-pie"></canvas></div>
+      </div>
+      <div class="table-wrap"><table id="table-revancha" class="data-table"></table></div>
+    </section>
+
+    <!-- TAB MEDIA SEMANA -->
+    <section id="tab-mediasemana" class="tab-panel">
+      <div class="panel-header">
+        <h2><i data-lucide="calendar-clock" class="h-icon"></i> Progol Media Semana</h2>
+        <div class="summary" id="summary-mediasemana"></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card"><h4>Aciertos por boleto</h4><canvas id="chart-mediasemana-bars"></canvas></div>
+        <div class="chart-card"><h4>Distribución</h4><canvas id="chart-mediasemana-pie"></canvas></div>
+      </div>
+      <div class="table-wrap"><table id="table-mediasemana" class="data-table"></table></div>
+    </section>
+
+    <!-- TAB BD / CONFIG -->
+    <section id="tab-bd" class="tab-panel">
+      <div class="panel-header">
+        <h2><i data-lucide="database" class="h-icon"></i> BD / Configuración</h2>
+      </div>
+
+      <div class="cards-grid">
+        <!-- Backup / Restaurar -->
+        <div class="card">
+          <h3><i data-lucide="hard-drive"></i> Respaldo</h3>
+          <p class="muted">Tus boletos viven en este navegador. Haz respaldo de vez en cuando.</p>
+          <div class="btn-row">
+            <button id="btn-export" class="btn btn-primary">
+              <i data-lucide="download"></i> Descargar respaldo (.json)
+            </button>
+            <button id="btn-restore" class="btn btn-danger">
+              <i data-lucide="rotate-ccw"></i> Reset a datos base
+            </button>
+          </div>
+          <div id="dropzone" class="dropzone">
+            <i data-lucide="upload-cloud"></i>
+            <div><strong>Arrastra aquí un .json</strong> para restaurarlo</div>
+            <small class="muted">o</small>
+            <button id="btn-import" class="btn">
+              <i data-lucide="folder-open"></i> Elegir archivo
+            </button>
+            <input type="file" id="file-import" accept=".json" hidden />
+          </div>
+        </div>
+
+        <!-- Nuevo concurso -->
+        <div class="card">
+          <h3><i data-lucide="plus-circle"></i> Nuevo concurso</h3>
+          <p class="muted">Crea un concurso vacío para cuando empiece el siguiente.</p>
+          <div class="form-row">
+            <input id="new-concurso-nombre" type="text" placeholder="Nombre (ej. Progol Jul-2026)" />
+            <select id="new-concurso-tipo">
+              <option value="progol">Progol (14 partidos)</option>
+              <option value="revancha">Revancha (7 partidos)</option>
+              <option value="mediasemana">Media Semana (9 partidos)</option>
+              <option value="custom">Personalizado</option>
+            </select>
+            <input id="new-concurso-n" type="number" min="1" max="30" value="14" />
+            <button id="btn-new-concurso" class="btn btn-primary">
+              <i data-lucide="plus"></i> Crear
+            </button>
+          </div>
+        </div>
+
+        <!-- Asistente Backend -->
+        <div class="card">
+          <h3><i data-lucide="bot"></i> Asistente Python (opcional)</h3>
+          <p class="muted">Requiere <code>python run.py</code>. Trae próximos partidos y momios reales si configuras API key.</p>
+          <div class="btn-row">
+            <button id="btn-fetch-next" class="btn btn-primary">
+              <i data-lucide="telescope"></i> Buscar próximo Progol
+            </button>
+            <button id="btn-suggest" class="btn">
+              <i data-lucide="target"></i> Sugerir picks
+            </button>
+          </div>
+          <div id="assistant-output" class="assistant-output muted">Sin datos aún.</div>
+        </div>
+      </div>
+
+      <div id="editor-root" class="editor-root"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="vendor/lucide.min.js"></script>
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="data/seed.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/probabilities.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/add-boleto.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/backend.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
